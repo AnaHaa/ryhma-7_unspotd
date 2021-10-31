@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, StyleSheet, TextInput, Button, ViewPropTypes} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 
 const MainMenu = ({ navigation }) => {
 
@@ -9,6 +9,10 @@ const MainMenu = ({ navigation }) => {
             <Button 
                 title="Add new location" 
                 onPress={() => navigation.navigate("Add Location")}
+            />
+            <Button 
+                title="Location menu" 
+                onPress={() => navigation.navigate("Location Menu")}
             />
         </View>
     )
