@@ -1,17 +1,25 @@
 # Ryhma 7: UnSpotd
 
-Made for school 2021
+School project for course Mobiiliohjelmointi 2021
 
-## REQUIREMENTS
+## Requirements
 
-npm i -g expo-cli
+npm
+expo-cli
+Expo Go for mobile
 React native tools
 Prettier
+VSCode
 
-## HOW TO RUN
+## Installation
 
--   cd UnSpotd
--   npm start # you can open iOS, Android, or web from here, or run them directly with the commands below.
--   npm run android
--   npm run ios # requires an iOS device or macOS for access to an iOS simulator
--   npm run web
+Use the package manager [npm](https://www.npmjs.com/) to install UnSpotd.
+
+```bash
+npm i -g expo-cli
+cd UnSpotd
+npm install
+expo start
+```
+
+Open the application on mobile using Expo Go and QR code or web application.
