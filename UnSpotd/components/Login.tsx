@@ -1,10 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
 
 const Login = ({ navigation }: { navigation: any }) => {
-
     return (
         <View style={styles.container}>
             <Text style={styles.header}>
@@ -12,7 +11,7 @@ const Login = ({ navigation }: { navigation: any }) => {
                 UnSpotd
             </Text>
             <LinearGradient
-                colors={['#080808', '#0095ff']}
+                colors={['#080808', '#082c6c']}
                 style={styles.linearGradient}
                 start={{ x: 0, y: 0.7 }}
             >
@@ -64,7 +63,7 @@ const styles = StyleSheet.create({
         width: '80%',
     },
     linearGradient: {
-        marginTop: 200,
+        marginTop: 40,
         flex: 1,
         padding: 20,
         alignItems: 'center',

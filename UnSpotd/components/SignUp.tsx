@@ -4,8 +4,6 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Button,
-  ViewPropTypes,
   TouchableOpacity
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,7 +19,7 @@ const SignUp = ({ navigation }: { navigation: any }) => {
         UnSpotd
       </Text>
       <LinearGradient
-        colors={['#080808', '#0095ff']}
+        colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
         start={{ x: 0, y: 0.7 }}
       >
@@ -131,7 +129,7 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
     color: '#2069e0',
-    marginBottom: 20,
+    marginBottom: 40,
   }
 })
 

@@ -19,7 +19,7 @@ export default function App() {
         <Stack.Screen name="Add Location" component={AddLocation} options={{ headerShown: false, title: '' }}/>
         <Stack.Screen name="Location menu" component={LocationMenu}/>
         <Stack.Screen name="Sign Up" component={SignUp} options={{ headerShown: false, title: '' }}/>
-        <Stack.Screen name="Help" component={Help} />
+        <Stack.Screen name="Help" component={Help} options={{ headerShown: false, title: '' }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

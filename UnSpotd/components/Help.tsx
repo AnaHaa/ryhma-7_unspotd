@@ -1,23 +1,24 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
 
 const Help = ({ navigation }: { navigation: any }) => {
     return (
         <View style={styles.container}>
+            <Text style={styles.header}>
+                <Ionicons name="location-sharp" size={50} color="white" />
+                UnSpotd
+            </Text>
             <LinearGradient
-                colors={['#080808', '#0095ff']}
+                colors={['#080808', '#082c6c']}
                 style={styles.linearGradient}
                 start={{ x: 0, y: 0.7 }}
             >
-
-                <Text style={styles.header}>
-                    <Ionicons name="location-sharp" size={50} color="white" />
-                    UnSpotd
-                </Text>
                 <Text style={styles.text}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit.
                 </Text>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
                     <Text style={{ color: 'white', fontSize: 15 }} >Got it</Text>
@@ -30,6 +31,14 @@ const Help = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'black'
+    },
+    header: {
+        padding: 5,
+        fontSize: 50,
+        color: 'white',
+        alignSelf: 'center',
+        marginTop: 100
     },
     linearGradient: {
         flex: 1,
@@ -37,22 +46,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
+        marginTop: 20,
+        marginBottom: 40,
         padding: 10,
         fontSize: 20,
         color: 'white',
-    },
-    header: {
-        padding: 5,
-        fontSize: 50,
-        color: 'white'
+        width: '80%'
     },
     button: {
-        marginTop: 50,
-        padding: 8,
+        padding: 10,
         borderRadius: 5,
         alignItems: 'center',
-        width: '95%',
-        backgroundColor: 'blue',
+        width: '80%',
+        backgroundColor: '#2069e0',
     },
 })
 

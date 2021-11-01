@@ -2,44 +2,48 @@ import React from "react";
 import { View, StyleSheet, TextInput, Text, FlatList, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-
 const LocationMenu = () => {
 
     var str = "location information here";
-    const data = Array(100).fill(str,0);
+    const data = Array(100).fill(str, 0);
     const renderItem = <Text></Text>
 
     return (
         <View style={styles.container}>
             <LinearGradient
-                colors={['#080808', '#0095ff']}
+                colors={['#080808', '#082c6c']}
                 style={styles.linearGradient}
                 start={{ x: 0, y: 0.7 }}
             >
                 <Text style={styles.header}>
                     Username
                 </Text>
-                <TextInput style={styles.input} placeholder='Search'  />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Search"
+                    placeholderTextColor="grey"
+                    keyboardType="default"
+                />
                 <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 10, alignItems: 'center' }}>
                     <TouchableOpacity style={styles.listFilter}>
-                        <Text style={{color: '#0095ff', fontSize: 20}} >Location</Text>
+                        <Text style={{ color: '#0095ff', fontSize: 20 }} >Location</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.listFilter}>
-                        <Text style={{color: '#0095ff', fontSize: 20}} >Visited</Text>
+                        <Text style={{ color: '#0095ff', fontSize: 20 }} >Visited</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.listFilter}>
-                        <Text style={{color: '#0095ff', fontSize: 20}} >Category</Text>
+                        <Text style={{ color: '#0095ff', fontSize: 20 }} >Category</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.listFilter}>
-                        <Text style={{color: '#0095ff', fontSize: 20}} >Tags</Text>
+                        <Text style={{ color: '#0095ff', fontSize: 20 }} >Tags</Text>
                     </TouchableOpacity>
                 </View>
                 <FlatList
-                    style={{width: '100%'}} 
+                    style={{ width: '100%' }}
                     data={data}
-                    renderItem={({item}) => (
+                    renderItem={({ item }) => (
                         <View style={styles.listItem}>
-                            <Text style={{fontSize: 20, color: 'white'}}>{item}</Text>
+                            <Text style={{ fontSize: 20, color: 'white' }}>{item}</Text>
                         </View>
                     )}
                 />
@@ -51,7 +55,6 @@ const LocationMenu = () => {
 const renderItem = () => {
 
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -68,13 +71,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     input: {
-        borderColor: 'gray',
-        borderWidth: 2,
-        borderRadius: 5,
-        margin: 10,
-        width: '75%',
+        height: 40,
+        marginBottom: 40,
+        borderWidth: 1,
+        padding: 10,
+        color: 'white',
         fontSize: 20,
-        backgroundColor: 'white'
+        backgroundColor: '#444444',
+        borderColor: '#878683',
+        borderRadius: 5,
+        alignItems: 'center',
+        width: '80%',
     },
     listItem: {
         padding: 10,
@@ -83,8 +90,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     listFilter: {
-        width: '25%', 
-        alignItems: 'center', 
+        width: '25%',
+        alignItems: 'center',
         borderColor: '#002336'
     },
 })
