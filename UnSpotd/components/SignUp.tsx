@@ -1,16 +1,38 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ToastAndroid
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
+import HttpModule from '../src/httpModule';
 
 const SignUp = ({ navigation }: { navigation: any }) => {
-  const [number, onChangeNumber] = React.useState(null);
+
+  const userService = new HttpModule;
+  
+  const [userName, setUsername] = useState('');
+  const [passwordHash, setPasswordHash] = useState('');
+  const [name, setName] = useState('');
+
+  async function handleCreateUser() {
+    try {
+      const user = await userService.createUser({
+        name, userName, passwordHash
+      })
+      setUsername('');
+      setPasswordHash('');
+      setName('');
+      ToastAndroid.showWithGravity("Account creation success! You can now log in.", ToastAndroid.LONG, ToastAndroid.CENTER);
+    } catch (error) {
+      ToastAndroid.showWithGravity("Account creation failed. Username already in use.", ToastAndroid.LONG, ToastAndroid.CENTER);
+      console.log(error);
+    }
+  } 
 
   return (
     <View style={styles.container}>
@@ -28,18 +50,24 @@ const SignUp = ({ navigation }: { navigation: any }) => {
           placeholder="Name (Optional)"
           placeholderTextColor="grey"
           keyboardType="default"
+          onChangeText={(event) => setName(event)}
+          value={name}
         />
         <TextInput
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="grey"
           keyboardType="email-address"
+          onChangeText={(event) => setUsername(event)}
+          value={userName}
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="grey"
           keyboardType="visible-password"
+          onChangeText={(event) => setPasswordHash(event)}
+          value={passwordHash}
         />
         <TouchableOpacity
           style={styles.textButtonTCH}
@@ -49,7 +77,7 @@ const SignUp = ({ navigation }: { navigation: any }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Main Menu")}
+          onPress={handleCreateUser}
         >
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
@@ -130,7 +158,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: '#2069e0',
     marginBottom: 40,
-  }
+  },
 })
 
 export default SignUp;
