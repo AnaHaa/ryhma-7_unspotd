@@ -1,9 +1,32 @@
-import React from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, {useState} from "react";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
+import HttpModule from '../src/httpModule';
 
 const Login = ({ navigation }: { navigation: any }) => {
+
+    const loginService = new HttpModule;
+    const [userName, setUsername] = useState('');
+    const [passwordHash, setPasswordHash] = useState('');
+    const [user, setUser] = useState('');
+    
+    async function handleLogin() {
+        try {
+        const user = await loginService.login({
+            userName, passwordHash
+        })
+            setUser(user)
+            setUsername('');
+            setPasswordHash('');
+            navigation.navigate("Main Menu");
+
+        } catch (error) {
+            ToastAndroid.showWithGravity("Login failed. Username or password was invalid", ToastAndroid.LONG, ToastAndroid.CENTER);
+            console.log(error);
+        }
+    } 
+
     return (
         <View style={styles.container}>
             <Text style={styles.header}>
@@ -13,23 +36,25 @@ const Login = ({ navigation }: { navigation: any }) => {
             <LinearGradient
                 colors={['#080808', '#082c6c']}
                 style={styles.linearGradient}
-                start={{ x: 0, y: 0.7 }}
+                start={{ x: 0, y: 0.5 }}
             >
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
                     placeholderTextColor="grey"
                     keyboardType="email-address"
+                    onChangeText={(event) => setUsername(event)}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
                     placeholderTextColor="grey"
                     keyboardType="visible-password"
+                    onChangeText={(event) => setPasswordHash(event)}
                 />
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate("Main Menu")}
+                    onPress={handleLogin}
                 >
                     <Text style={styles.buttonText}>Log In</Text>
                 </TouchableOpacity>
