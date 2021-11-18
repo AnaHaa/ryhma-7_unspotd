@@ -1,38 +1,39 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  ToastAndroid
+  Alert
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
 import HttpModule from '../src/httpModule';
 
 const SignUp = ({ navigation }: { navigation: any }) => {
-
   const userService = new HttpModule;
-  
   const [userName, setUsername] = useState('');
   const [passwordHash, setPasswordHash] = useState('');
   const [name, setName] = useState('');
 
   async function handleCreateUser() {
     try {
-      const user = await userService.createUser({
+      const userObject = await userService.createUser({
         name, userName, passwordHash
-      })
+      });
+
       setUsername('');
       setPasswordHash('');
       setName('');
-      ToastAndroid.showWithGravity("Account creation success! You can now log in.", ToastAndroid.LONG, ToastAndroid.CENTER);
+
+      navigation.navigate("Main Menu", {
+        userInformation: userObject
+      });
     } catch (error) {
-      ToastAndroid.showWithGravity("Account creation failed. Username already in use.", ToastAndroid.LONG, ToastAndroid.CENTER);
-      console.log(error);
+      Alert.alert("Account creation failed", "Username already in use.");
     }
-  } 
+  }
 
   return (
     <View style={styles.container}>

@@ -1,11 +1,39 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
+import HttpModule from "../src/httpModule";
 
-const AddLocation = ({ navigation }: { navigation: any }) => {
+const AddLocation = ({ route, navigation }: { route: any, navigation: any }) => {
+    const userObject = route.params.userInformation;
     const [selectedLanguage, setSelectedLanguage] = useState();
+    const [name, setName] = useState('');
+    const [dateCreated, setDateCreated] = useState('');
+    const [visited, setVisited] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [coordinates, setCoordinates] = useState({lat: '', lon: ''});
+    const locationService = new HttpModule;
+
+    async function handleCreateLocation() {
+        try {
+            await locationService.createLocation({
+                name, dateCreated, visited, comments, coordinates
+            });
+
+            setName('');
+            setDateCreated('');
+            setVisited(false);
+            setComments([]);
+            setCoordinates({ lat: '', lon: '' });
+
+            navigation.navigate("Main Menu", {
+                userInformation: userObject
+            });
+        } catch (error) {
+            Alert.alert("Location creation failed", "Something went wrong...");
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -23,12 +51,16 @@ const AddLocation = ({ navigation }: { navigation: any }) => {
                     placeholder="Name"
                     placeholderTextColor="grey"
                     keyboardType="default"
+                    onChangeText={(event) => setName(event)}
+                    value={name}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Address"
                     placeholderTextColor="grey"
                     keyboardType="default"
+                    onChangeText={(event) => setCoordinates({lat: event, lon: event})}
+                    value={coordinates.lat}
                 />
                 <TextInput
                     style={styles.input}
@@ -50,7 +82,7 @@ const AddLocation = ({ navigation }: { navigation: any }) => {
                 </View>
                 <TouchableOpacity
                     style={styles.radioButton}
-                    onPress={() => navigation.navigate("Main Menu")}
+                    onPress={() => setVisited(true)}
                 >
                     <Ionicons name="radio-button-off-outline" size={40} color="white" />
                     <Text style={styles.radioButtonText}>Visited</Text>
@@ -58,7 +90,7 @@ const AddLocation = ({ navigation }: { navigation: any }) => {
                 <View style={styles.confirmButtons}>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => navigation.navigate("Main Menu")}
+                        onPress={() => handleCreateLocation()}
                     >
                         <Text style={styles.buttonText}>Add</Text>
                     </TouchableOpacity>

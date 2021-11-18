@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, TextInput, Text, FlatList, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const LocationMenu = () => {
+const LocationMenu = ({ route, navigation }: { route: any, navigation: any }) => {
 
     var str = "location information here";
     const data = Array(100).fill(str, 0);

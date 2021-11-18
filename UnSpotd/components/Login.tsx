@@ -1,31 +1,30 @@
-import React, {useState} from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
 import HttpModule from '../src/httpModule';
 
 const Login = ({ navigation }: { navigation: any }) => {
-
     const loginService = new HttpModule;
     const [userName, setUsername] = useState('');
     const [passwordHash, setPasswordHash] = useState('');
-    const [user, setUser] = useState('');
-    
+
     async function handleLogin() {
         try {
-        const user = await loginService.login({
-            userName, passwordHash
-        })
-            setUser(user)
+            const userObject = await loginService.login({
+                userName, passwordHash
+            });
+
             setUsername('');
             setPasswordHash('');
-            navigation.navigate("Main Menu");
 
+            navigation.navigate("Main Menu", {
+                userInformation: userObject
+            });
         } catch (error) {
-            ToastAndroid.showWithGravity("Login failed. Username or password was invalid", ToastAndroid.LONG, ToastAndroid.CENTER);
-            console.log(error);
+            Alert.alert("Login failed", "Username or password was invalid");
         }
-    } 
+    }
 
     return (
         <View style={styles.container}>

@@ -16,9 +16,10 @@ const Help = ({ navigation }: { navigation: any }) => {
                 start={{ x: 0, y: 0.7 }}
             >
                 <Text style={styles.text}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit.
+                    This is a student project made for school course Ohjelmistotekniikan mobiiliprojekti 2021 syksy.
+                    Personal data is stored to create personal locations. By giving us your email and possible name, you consent
+                    to us storing and using this information for this application. Email antti.haarala@tuni.fi to request
+                    your personal data or to remove it from our database.
                 </Text>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
                     <Text style={{ color: 'white', fontSize: 15 }} >Got it</Text>

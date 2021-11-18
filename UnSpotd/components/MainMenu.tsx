@@ -1,9 +1,22 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
+import HttpModule from '../src/httpModule';
 
-const MainMenu = ({ navigation }: { navigation: any }) => {
+const MainMenu = ({ route, navigation }: { route: any, navigation: any }) => {
+    const visitService = new HttpModule;
+    const userObject = route.params;
+    const [userLocations, setUserLocations] = useState([]);
+
+    useEffect(() => {
+        async function fetchUserLocations() {
+            const userLocations = await visitService.getUserLocations(userObject._id);
+            setUserLocations(userLocations);
+        }
+
+        fetchUserLocations();
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -24,11 +37,16 @@ const MainMenu = ({ navigation }: { navigation: any }) => {
                         placeholderTextColor="grey"
                         keyboardType="default"
                     />
-                    <TouchableOpacity style={styles.menu} onPress={() => navigation.navigate('Location menu')}>
+                    <TouchableOpacity style={styles.menu} onPress={() => navigation.navigate('Location menu', {
+                        userInformation: userObject,
+                        userLocations: userLocations
+                    })}>
                         <Ionicons name="menu-outline" size={40} color="white" />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('Add Location')}>
+                <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('Add Location', {
+                    userInformation: userObject
+                })}>
                     <Ionicons name="add-outline" size={40} color="white" />
                 </TouchableOpacity>
             </LinearGradient>
@@ -87,7 +105,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2069e0',
         borderRadius: 5,
         alignItems: 'center'
-        
+
     },
     input: {
         height: 40,
