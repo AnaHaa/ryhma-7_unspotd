@@ -3,23 +3,33 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ToastAndroid } fro
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
 import HttpModule from '../src/httpModule';
-
+import { User, Visits } from '../interfaces/index'
+ 
 const Login = ({ navigation }: { navigation: any }) => {
 
-    const loginService = new HttpModule;
+    const httpModule = new HttpModule;
     const [userName, setUsername] = useState('');
     const [passwordHash, setPasswordHash] = useState('');
-    const [user, setUser] = useState('');
+    const [user, setUser] = useState<User>();
+    const [visits, setVisits] = useState<Visits>();
     
     async function handleLogin() {
         try {
-        const user = await loginService.login({
+        const user = await httpModule.login({
             userName, passwordHash
         })
             setUser(user)
             setUsername('');
             setPasswordHash('');
-            navigation.navigate("Main Menu");
+            try {
+                const visits = await httpModule.getVisits(user._id);
+                setVisits(visits);
+                navigation.navigate("Main Menu", {user: user, visits: visits});
+            } catch (error) {
+                ToastAndroid.showWithGravity("No visits found for user.", ToastAndroid.LONG, ToastAndroid.CENTER);
+                console.log(error);
+                navigation.navigate("Main Menu", {user: user, visits: visits});
+            }
 
         } catch (error) {
             ToastAndroid.showWithGravity("Login failed. Username or password was invalid", ToastAndroid.LONG, ToastAndroid.CENTER);

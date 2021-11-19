@@ -23,6 +23,16 @@ export default class HttpModule {
             return response.data;
         }
     }
+
+    async getVisits(UserId: string) {
+        if(requestConfig.userEndPoint && requestConfig.apiKey) {
+            const url = requestConfig.visitEndPoint+"?UserId="+UserId;
+            const response = await axios.get(url, {
+                headers: {apikey: requestConfig.apiKey}
+            });
+            return response.data;
+        }
+    }
     // Every endpoint logic for every view goes here
     // create async function with types
     // Types in src/interface
