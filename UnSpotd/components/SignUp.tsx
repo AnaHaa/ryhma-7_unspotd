@@ -5,34 +5,35 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  ToastAndroid
+  Alert,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from "@expo/vector-icons";
+import {LinearGradient} from 'expo-linear-gradient';
+import {Ionicons} from '@expo/vector-icons';
 import HttpModule from '../src/httpModule';
 
-const SignUp = ({ navigation }: { navigation: any }) => {
-
+const SignUp = ({navigation}: { navigation: any }) => {
   const userService = new HttpModule;
-  
   const [userName, setUsername] = useState('');
   const [passwordHash, setPasswordHash] = useState('');
   const [name, setName] = useState('');
 
   async function handleCreateUser() {
     try {
-      const user = await userService.createUser({
-        name, userName, passwordHash
-      })
+      const userObject = await userService.createUser({
+        name, userName, passwordHash,
+      });
+
       setUsername('');
       setPasswordHash('');
       setName('');
-      ToastAndroid.showWithGravity("Account creation success! You can now log in.", ToastAndroid.LONG, ToastAndroid.CENTER);
+
+      navigation.navigate('Main Menu', {
+        userInformation: userObject,
+      });
     } catch (error) {
-      ToastAndroid.showWithGravity("Account creation failed. Username already in use.", ToastAndroid.LONG, ToastAndroid.CENTER);
-      console.log(error);
+      Alert.alert('Account creation failed', 'Username already in use.');
     }
-  } 
+  }
 
   return (
     <View style={styles.container}>
@@ -43,7 +44,7 @@ const SignUp = ({ navigation }: { navigation: any }) => {
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{ x: 0, y: 0.7 }}
+        start={{x: 0, y: 0.7}}
       >
         <TextInput
           style={styles.input}
@@ -71,9 +72,18 @@ const SignUp = ({ navigation }: { navigation: any }) => {
         />
         <TouchableOpacity
           style={styles.textButtonTCH}
-          onPress={() => navigation.navigate("Help")}
+          onPress={() => navigation.navigate('Help')}
         >
-          <Text style={styles.buttonText}>By clicking Sign Up, you agree to our <Text style={styles.textButtonText}>terms and conditions</Text></Text>
+          <Text
+            style={styles.buttonText}
+          >
+          By clicking Sign Up, you agree to our
+            <Text
+              style={styles.textButtonText}
+            >
+              terms and conditions
+            </Text>
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
@@ -83,7 +93,7 @@ const SignUp = ({ navigation }: { navigation: any }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.textButtonLogin}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => navigation.navigate('Login')}
         >
           <Text style={styles.textButtonText}>Already an user? Log In</Text>
         </TouchableOpacity>
@@ -95,7 +105,7 @@ const SignUp = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black'
+    backgroundColor: 'black',
   },
   input: {
     height: 40,
@@ -124,7 +134,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 15,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   textButtonText: {
     color: '#2069e0',
@@ -135,7 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     color: 'white',
     alignSelf: 'center',
-    marginTop: 100
+    marginTop: 100,
   },
   button: {
     padding: 10,
@@ -149,7 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '80%',
     alignItems: 'flex-end',
-    color: '#2069e0'
+    color: '#2069e0',
   },
   textButtonTCH: {
     padding: 10,
@@ -159,6 +169,6 @@ const styles = StyleSheet.create({
     color: '#2069e0',
     marginBottom: 40,
   },
-})
+});
 
 export default SignUp;
