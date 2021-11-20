@@ -3,6 +3,8 @@ import {View, StyleSheet, TextInput, Text, FlatList, TouchableOpacity} from 'rea
 import {LinearGradient} from 'expo-linear-gradient';
 
 const LocationMenu = ({route, navigation}: { route: any, navigation: any }) => {
+  // const userObject = route.params.userInformation;
+  // const userLocations = route.params.userLocations;
   const str = 'location information here';
   const data = Array(100).fill(str, 0);
   // let renderItem = <Text></Text>;
@@ -50,13 +52,11 @@ const LocationMenu = ({route, navigation}: { route: any, navigation: any }) => {
     </View>
   );
 };
-
 /*
 const renderItem = () => {
 
 }
 */
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

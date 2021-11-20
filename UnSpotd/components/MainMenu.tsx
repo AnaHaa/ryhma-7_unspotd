@@ -1,18 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, TextInput} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image, TextInput, Alert} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
 import HttpModule from '../src/httpModule';
 
 const MainMenu = ({route, navigation}: { route: any, navigation: any }) => {
   const visitService = new HttpModule;
-  const userObject = route.params;
+  const userObject = route.params.userInformation;
   const [userLocations, setUserLocations] = useState([]);
 
   useEffect(() => {
     async function fetchUserLocations() {
-      const userLocations = await visitService.getUserLocations(userObject._id);
-      setUserLocations(userLocations);
+      try {
+        console.log(userObject._id);
+        const userLocations = await visitService.getUserLocations(userObject._id);
+        setUserLocations(userLocations);
+      } catch (e) {
+        Alert.alert('Failed to get locations.');
+      }
     }
 
     fetchUserLocations();

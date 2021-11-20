@@ -1,30 +1,32 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
+import RNPickerSelect from 'react-native-picker-select';
 import HttpModule from '../src/httpModule';
 
 const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
   const userObject = route.params.userInformation;
-  const [selectedLanguage, setSelectedLanguage] = useState();
+  const UserId: string = userObject._id;
   const [name, setName] = useState('');
-  const [dateCreated, setDateCreated] = useState('');
+  const [dateCreated, setDateCreated] = useState((new Date()).toLocaleDateString());
   const [visited, setVisited] = useState(false);
-  const [comments, setComments] = useState([]);
   const [coordinates, setCoordinates] = useState({lat: '', lon: ''});
+  const [category, setCategory] = useState('');
   const locationService = new HttpModule;
 
   async function handleCreateLocation() {
     try {
-      await locationService.createLocation({
-        name, dateCreated, visited, comments, coordinates,
+      const response = await locationService.upsertLocation({
+        UserId, name, dateCreated, visited, coordinates, category,
       });
+
+      console.log(response);
 
       setName('');
       setDateCreated('');
       setVisited(false);
-      setComments([]);
+      setCategory('');
       setCoordinates({lat: '', lon: ''});
 
       navigation.navigate('Main Menu', {
@@ -33,6 +35,10 @@ const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
     } catch (error) {
       Alert.alert('Location creation failed', 'Something went wrong...');
     }
+  }
+
+  function handleRadioButton() {
+    setVisited(!visited);
   }
 
   return (
@@ -60,31 +66,34 @@ const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
           placeholderTextColor="grey"
           keyboardType="default"
           onChangeText={(event) => setCoordinates({lat: event, lon: event})}
-          value={coordinates.lat}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Tags"
-          placeholderTextColor="grey"
-          keyboardType="default"
         />
         <View style={styles.pickerInput}>
-          <Picker
-            style={styles.picker}
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
-            <Picker.Item label="Category" value="1" />
-            <Picker.Item label="Category" value="2" />
-            <Picker.Item label="Category" value="3" />
-          </Picker>
+          <RNPickerSelect
+            style={{
+              ...pickerSelectStyles,
+              iconContainer: {
+                top: 20,
+                right: 10,
+              },
+              placeholder: {
+                color: 'white',
+                fontSize: 20,
+                fontWeight: 'bold',
+              },
+            }}
+            onValueChange={(value) => setCategory(value)}
+            items={[
+              {label: 'Nature', value: 'Nature'},
+              {label: 'Towns and cities', value: 'Towns and cities'},
+              {label: 'Cultural and heritage', value: 'Cultural and heritage'},
+            ]}
+          />
         </View>
         <TouchableOpacity
           style={styles.radioButton}
-          onPress={() => setVisited(true)}
+          onPress={() => handleRadioButton()}
         >
-          <Ionicons name="radio-button-off-outline" size={40} color="white" />
+          <Ionicons name={visited ? 'radio-button-on' : 'radio-button-off'} size={40} color="white" />
           <Text style={styles.radioButtonText}>Visited</Text>
         </TouchableOpacity>
         <View style={styles.confirmButtons}>
@@ -96,7 +105,9 @@ const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('Main Menu')}
+            onPress={() => navigation.navigate('Main Menu', {
+              userInformation: userObject,
+            })}
           >
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
@@ -138,18 +149,15 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   pickerInput: {
-    height: 50,
+    height: 40,
     marginBottom: 40,
     borderWidth: 1,
+    paddingLeft: 10,
+    color: 'white',
     backgroundColor: '#444444',
     borderColor: '#878683',
     borderRadius: 5,
     width: '80%',
-  },
-  picker: {
-    height: '100%',
-    color: '#878683',
-    width: '100%',
   },
   linearGradient: {
     marginTop: 40,
@@ -189,6 +197,19 @@ const styles = StyleSheet.create({
   confirmButtons: {
     width: '80%',
     flexDirection: 'row',
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 20,
+    color: 'white',
+    height: 40,
+  },
+  inputAndroid: {
+    fontSize: 20,
+    color: 'white',
+    height: 40,
   },
 });
 

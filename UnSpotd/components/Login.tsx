@@ -22,6 +22,8 @@ const Login = ({navigation}: { navigation: any }) => {
         userName, passwordHash,
       });
 
+      console.log(userObject);
+
       setUsername('');
       setPasswordHash('');
 

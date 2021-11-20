@@ -6,8 +6,8 @@ export default class Settings {
   apiKey: string | undefined;
 
   /**
-     * Fetch configuration information
-     */
+   * Fetch configuration information
+   */
   constructor() {
     try {
       this.userEndPoint = connection.userUrl;
