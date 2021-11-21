@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { View, StyleSheet, TextInput, Text, FlatList, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Visits } from '../interfaces/index'
+import { Visits, Visit } from '../interfaces/index'
 
 
 const LocationMenu = ({ route }: any) => {
@@ -62,6 +62,10 @@ const LocationMenu = ({ route }: any) => {
         }
     }
 
+    function handleLocationPress(visit: Visit) {
+        console.log(visit);
+    }
+
     return (
         <View style={styles.container}>
             <LinearGradient
@@ -94,9 +98,11 @@ const LocationMenu = ({ route }: any) => {
                     style={{ width: '100%' }}
                     data={filteredVisits}
                     renderItem={({ item }) => (
-                        <View style={styles.listItem}>
-                            <Text style={{ fontSize: 20, color: 'white', marginRight: 5, flexShrink: 1, }}>{item.name}</Text>
-                            <Text style={{ fontSize: 20, color: 'white' }}>{item.dateCreated}</Text>
+                        <View>
+                            <TouchableOpacity style={styles.listItem} onPress={() => handleLocationPress(item)}>
+                                <Text style={{ fontSize: 20, color: 'white', marginRight: 5, flexShrink: 1, }}>{item.name}</Text>
+                                <Text style={{ fontSize: 20, color: 'white' }}>{item.dateCreated}</Text>
+                            </TouchableOpacity>
                         </View>
                     )}
                     keyExtractor={(item, index) => index.toString()}

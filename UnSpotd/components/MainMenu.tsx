@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from "@expo/vector-icons";
-import { TabRouter } from "@react-navigation/routers";
 
 const MainMenu = ({navigation, route}: any) => {
 

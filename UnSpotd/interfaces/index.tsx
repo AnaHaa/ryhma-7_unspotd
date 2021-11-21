@@ -10,7 +10,7 @@ export interface User {
 
 export interface Visits extends Array<Visit> {};
 
-interface Visit {
+export interface Visit {
     UserId: string,
     _id: string,
     name: string,

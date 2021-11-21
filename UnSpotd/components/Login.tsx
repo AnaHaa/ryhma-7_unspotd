@@ -54,6 +54,7 @@ const Login = ({ navigation }: { navigation: any }) => {
                     placeholderTextColor="grey"
                     keyboardType="email-address"
                     onChangeText={(event) => setUsername(event)}
+                    value={userName}
                 />
                 <TextInput
                     style={styles.input}
@@ -61,6 +62,7 @@ const Login = ({ navigation }: { navigation: any }) => {
                     placeholderTextColor="grey"
                     keyboardType="visible-password"
                     onChangeText={(event) => setPasswordHash(event)}
+                    value={passwordHash}
                 />
                 <TouchableOpacity
                     style={styles.button}
