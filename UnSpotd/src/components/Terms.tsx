@@ -2,27 +2,29 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
+import {Navigation} from '../interfaces';
 
-const Help = ({navigation}: { navigation: any }) => {
+// Basic view for showing the user Terms and Conditions
+const Terms = ({navigation}: { navigation: Navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
         <Ionicons name="location-sharp" size={50} color="white" />
-                UnSpotd
+        UnSpotd
       </Text>
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0, y: 0.7}}
+        start={{x: 0.5, y: 0.7}}
       >
         <Text style={styles.text}>
-                    This is a student project made for school course
-                    Ohjelmistotekniikan mobiiliprojekti 2021 syksy.
-                    Personal data is stored to create personal locations.
-                    By giving us your email and possible name, you consent
-                    to us storing and using this information for this
-                    application. Email antti.haarala@tuni.fi to request
-                    your personal data or to remove it from our database.
+          This is a student project made for school course
+          Ohjelmistotekniikan mobiiliprojekti 2021 syksy.
+          Personal data is stored to create personal locations.
+          By giving us your email and possible name, you consent
+          to us storing and using this information for this
+          application. Email antti.haarala@tuni.fi to request
+          your personal data or to remove it from our database.
         </Text>
         <TouchableOpacity
           style={styles.button}
@@ -69,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Help;
+export default Terms;
