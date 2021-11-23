@@ -3,40 +3,56 @@ import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
-import HttpModule from '../src/httpModule';
+import HttpModule from '../httpModule';
+import {Route} from '../interfaces';
 
-const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
+const AddLocation = ({route}: { route: Route }) => {
+  // Set up HttpModule for API connection
+  const httpService = new HttpModule;
+
+  // Fetch route information
   const userObject = route.params.userInformation;
-  const UserId: string = userObject._id;
-  const [name, setName] = useState('');
-  const [dateCreated, setDateCreated] = useState((new Date()).toLocaleDateString());
-  const [visited, setVisited] = useState(false);
-  const [coordinates, setCoordinates] = useState({lat: '', lon: ''});
-  const [category, setCategory] = useState('');
-  const locationService = new HttpModule;
 
+  // Get all data from route variables and fetch current date
+  const UserId = userObject._id ? userObject._id : '';
+  const dateCreated = (new Date()).toLocaleDateString();
+
+  // Set editable fields
+  const [name, setName] = useState('');
+  const [visited, setVisited] = useState(false);
+  const [comments, setComments] = useState({comment: ''});
+  const [category, setCategory] = useState('');
+
+  // Create location using HttpModule
   async function handleCreateLocation() {
     try {
-      const response = await locationService.upsertLocation({
-        UserId, name, dateCreated, visited, coordinates, category,
-      });
+      // Check if name is valid
+      if (name.length < 2) {
+        Alert.alert('Location creation failed', 'Name must be atleast 2 characters');
+      } else if (userObject._id) {
+        const response = await httpService.upsertLocation({
+          UserId, name, dateCreated, visited, comments: [comments], category,
+        });
 
-      console.log(response);
+        // TODO REMOVE
+        console.log(response);
 
-      setName('');
-      setDateCreated('');
-      setVisited(false);
-      setCategory('');
-      setCoordinates({lat: '', lon: ''});
+        setName('');
+        setVisited(false);
+        setCategory('');
+        setComments({comment: ''});
 
-      navigation.navigate('Main Menu', {
-        userInformation: userObject,
-      });
+        // Navigate to Main menu and send user object
+        // back for usage
+        Alert.alert('Location created!', 'Location can be found in Locations.');
+      }
     } catch (error) {
+      // Alert error if something is wrong with API or fields
       Alert.alert('Location creation failed', 'Something went wrong...');
     }
   }
 
+  // Handle radio button boolean
   function handleRadioButton() {
     setVisited(!visited);
   }
@@ -45,27 +61,21 @@ const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
     <View style={styles.container}>
       <Text style={styles.header}>
         <Ionicons name="add-circle-outline" size={50} color="white" />
-                &nbsp;Location
+        &nbsp;Location
       </Text>
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0, y: 0.7}}
+        start={{x: 0.5, y: 0.7}}
       >
         <TextInput
           style={styles.input}
           placeholder="Name"
+          maxLength={26}
           placeholderTextColor="grey"
           keyboardType="default"
           onChangeText={(event) => setName(event)}
           value={name}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Address"
-          placeholderTextColor="grey"
-          keyboardType="default"
-          onChangeText={(event) => setCoordinates({lat: event, lon: event})}
         />
         <View style={styles.pickerInput}>
           <RNPickerSelect
@@ -76,12 +86,13 @@ const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
                 right: 10,
               },
               placeholder: {
-                color: 'white',
+                color: 'grey',
                 fontSize: 20,
-                fontWeight: 'bold',
               },
             }}
             onValueChange={(value) => setCategory(value)}
+            placeholder={{
+            }}
             items={[
               {label: 'Nature', value: 'Nature'},
               {label: 'Towns and cities', value: 'Towns and cities'},
@@ -89,6 +100,16 @@ const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
             ]}
           />
         </View>
+        <TextInput
+          style={styles.commentInput}
+          blurOnSubmit={true}
+          multiline
+          maxLength={80}
+          placeholder="Comments"
+          placeholderTextColor="grey"
+          keyboardType="default"
+          onChangeText={(event) => setComments({comment: event})}
+        />
         <TouchableOpacity
           style={styles.radioButton}
           onPress={() => handleRadioButton()}
@@ -101,15 +122,7 @@ const AddLocation = ({route, navigation}: { route: any, navigation: any }) => {
             style={styles.button}
             onPress={() => handleCreateLocation()}
           >
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Main Menu', {
-              userInformation: userObject,
-            })}
-          >
-            <Text style={styles.buttonText}>Cancel</Text>
+            <Text style={styles.buttonText}>Add location</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -128,7 +141,8 @@ const styles = StyleSheet.create({
     height: 50,
     width: '80%',
     marginBottom: 40,
-
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   radioButtonText: {
     fontSize: 35,
@@ -137,6 +151,19 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
+    marginBottom: 40,
+    borderWidth: 1,
+    padding: 10,
+    color: 'white',
+    fontSize: 20,
+    backgroundColor: '#444444',
+    borderColor: '#878683',
+    borderRadius: 5,
+    alignItems: 'center',
+    width: '80%',
+  },
+  commentInput: {
+    height: 120,
     marginBottom: 40,
     borderWidth: 1,
     padding: 10,
@@ -165,19 +192,10 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
   },
-  textHeader: {
-    padding: 10,
-    fontSize: 20,
-    color: 'white',
-  },
   buttonText: {
     color: 'white',
     fontSize: 15,
     textAlign: 'center',
-  },
-  textButtonText: {
-    color: '#2069e0',
-    fontSize: 15,
   },
   header: {
     padding: 5,
@@ -192,7 +210,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#2069e0',
     marginRight: '10%',
-    width: '45%',
+    width: '100%',
   },
   confirmButtons: {
     width: '80%',

@@ -39,11 +39,11 @@ export default class HttpModule {
    * @param {user} user - user object
    */
   async upsertUser(
-      user: {name: string,
+      user: {
+        name: string,
         userName: string,
         passwordHash: string,
         country: string,
-        profilePic: string,
         },
   ) {
     if (this.requestConfig.userEndPoint && this.requestConfig.apiKey) {
@@ -80,7 +80,9 @@ export default class HttpModule {
         name: string,
         dateCreated: string,
         visited: boolean,
-        coordinates: {lat: string, lon: string},
+        comments: [{
+          comment: string
+        }],
         category: string,
         },
   ) {
@@ -95,11 +97,11 @@ export default class HttpModule {
 
   /**
    * Delete existing location using Id
-   * @param {location} location - location id
+   * @param {_id} _id - location id
    */
-  async deleteLocation(location: {_id: string}) {
+  async deleteLocation(_id: string) {
     if (this.requestConfig.userEndPoint && this.requestConfig.apiKey) {
-      const url = this.requestConfig.visitEndPoint+'?visitId='+location._id;
+      const url = this.requestConfig.visitEndPoint+'?visitId='+_id;
       const response = await axios.delete(url, {
         headers: {apikey: this.requestConfig.apiKey},
       });

@@ -7,54 +7,80 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
-import HttpModule from '../src/httpModule';
+import HttpModule from '../httpModule';
+import {Navigation, User} from '../interfaces';
 
-const SignUp = ({navigation}: { navigation: any }) => {
-  const userService = new HttpModule;
+const Login = ({navigation}: { navigation: Navigation }) => {
+  // Set up HttpModule for API connection
+  const httpService = new HttpModule;
+
+  // Store user information in device safely
+  const storeData = async (value: User) => {
+    try {
+      await AsyncStorage.setItem('@userInformation', JSON.stringify(value));
+      console.log('Stored user information');
+    } catch (e) {
+      Alert.alert('Account creation failed', 'Failed to store user information.');
+    }
+  };
+
+  // Set all fields
   const [userName, setUsername] = useState('');
   const [passwordHash, setPasswordHash] = useState('');
-  const [name, setName] = useState('');
 
-  async function handleCreateUser() {
+  // Handle user login
+  async function handleLogin() {
     try {
-      const userObject = await userService.createUser({
-        name, userName, passwordHash,
-      });
+      // Check that the input are valid
+      if (userName.length < 5 || passwordHash.length < 8 || !userName.includes('@') || !userName.includes('.')) {
+        Alert.alert('Email or password invalid', 'Email should be atleast 5 characters or password 8 characters');
+      } else {
+        // Use HttpModule to log in the existing user
+        const userObject = await httpService.login({
+          userName, passwordHash,
+        });
 
-      setUsername('');
-      setPasswordHash('');
-      setName('');
+        // Set user information to be stored
+        const storedUserObject = {
+          userName,
+          passwordHash,
+        };
 
-      navigation.navigate('Main Menu', {
-        userInformation: userObject,
-      });
+        // Store user information on to device
+        await storeData(storedUserObject);
+
+        // Clear all fields
+        setUsername('');
+        setPasswordHash('');
+
+        // Navigate to Main menu and send user object
+        // back for usage
+        navigation.navigate('Main Menu', {
+          userInformation: userObject,
+        });
+      }
     } catch (error) {
-      Alert.alert('Account creation failed', 'Username already in use.');
+      // Catch and alert incase of error
+      Alert.alert('Login failed', 'Username or password was invalid');
     }
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>
-        <Ionicons name="location-sharp" size={50} color="white" />
-        UnSpotd
-      </Text>
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0, y: 0.7}}
+        start={{x: 0.5, y: 0.7}}
       >
+        <Text style={styles.header}>
+          <Ionicons name="location-sharp" size={50} color="white" />
+          UnSpotd
+        </Text>
         <TextInput
-          style={styles.input}
-          placeholder="Name (Optional)"
-          placeholderTextColor="grey"
-          keyboardType="default"
-          onChangeText={(event) => setName(event)}
-          value={name}
-        />
-        <TextInput
+          maxLength={64}
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="grey"
@@ -63,39 +89,41 @@ const SignUp = ({navigation}: { navigation: any }) => {
           value={userName}
         />
         <TextInput
+          maxLength={64}
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="grey"
-          keyboardType="visible-password"
+          keyboardType="default"
+          secureTextEntry={true}
           onChangeText={(event) => setPasswordHash(event)}
           value={passwordHash}
         />
         <TouchableOpacity
           style={styles.textButtonTCH}
-          onPress={() => navigation.navigate('Help')}
+          onPress={() => navigation.navigate('Terms')}
         >
           <Text
             style={styles.buttonText}
           >
-          By clicking Sign Up, you agree to our
+            By clicking Log In, you agree to our
             <Text
               style={styles.textButtonText}
             >
-              terms and conditions
+              &nbsp;terms and conditions
             </Text>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={handleCreateUser}
+          onPress={handleLogin}
         >
-          <Text style={styles.buttonText}>Sign Up</Text>
+          <Text style={styles.buttonText}>Log In</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.textButtonLogin}
-          onPress={() => navigation.navigate('Login')}
+          style={styles.textButton}
+          onPress={() => navigation.navigate('Sign Up')}
         >
-          <Text style={styles.textButtonText}>Already an user? Log In</Text>
+          <Text style={styles.textButtonText}>Create an account</Text>
         </TouchableOpacity>
       </LinearGradient>
     </View>
@@ -126,15 +154,10 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
   },
-  textHeader: {
-    padding: 10,
-    fontSize: 20,
-    color: 'white',
-  },
   buttonText: {
+    textAlign: 'center',
     color: 'white',
     fontSize: 15,
-    textAlign: 'center',
   },
   textButtonText: {
     color: '#2069e0',
@@ -145,7 +168,8 @@ const styles = StyleSheet.create({
     fontSize: 50,
     color: 'white',
     alignSelf: 'center',
-    marginTop: 100,
+    marginTop: 40,
+    marginBottom: 120,
   },
   button: {
     padding: 10,
@@ -154,7 +178,7 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: '#2069e0',
   },
-  textButtonLogin: {
+  textButton: {
     padding: 10,
     borderRadius: 5,
     width: '80%',
@@ -171,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default Login;
