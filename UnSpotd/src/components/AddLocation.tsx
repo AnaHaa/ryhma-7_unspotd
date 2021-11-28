@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {Platform, View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
@@ -19,6 +19,7 @@ const AddLocation = ({route}: { route: Route }) => {
 
   // Set editable fields
   const [name, setName] = useState('');
+  const [coordinates, setCoordinates] = useState({lat: '', lon: ''});
   const [visited, setVisited] = useState(false);
   const [comments, setComments] = useState({comment: ''});
   const [category, setCategory] = useState('');
@@ -26,12 +27,23 @@ const AddLocation = ({route}: { route: Route }) => {
   // Create location using HttpModule
   async function handleCreateLocation() {
     try {
-      // Check if name is valid
-      if (name.length < 2) {
-        Alert.alert('Location creation failed', 'Name must be atleast 2 characters');
+      // Check if name and coordinates are valid
+      if (
+        name.length < 2 ||
+        !Number(coordinates.lat) || !Number(coordinates.lon) ||
+        Number(coordinates.lat) < -90 ||
+        Number(coordinates.lat) > 90 ||
+        Number(coordinates.lon) < -180 ||  
+        Number(coordinates.lon) > 180
+      ) 
+      {
+        Alert.alert(
+          'Location creation failed', 
+          'Name must be at least 2 characters, latitude must be a number between -90 and 90 and longitude between -180 and 180.'
+        );
       } else if (userObject._id) {
         const response = await httpService.upsertLocation({
-          UserId, name, dateCreated, visited, comments: [comments], category,
+          UserId, name, dateCreated, visited, comments: [comments], category, coordinates
         });
 
         // TODO REMOVE
@@ -41,6 +53,7 @@ const AddLocation = ({route}: { route: Route }) => {
         setVisited(false);
         setCategory('');
         setComments({comment: ''});
+        setCoordinates({lat: '', lon: ''});
 
         // Navigate to Main menu and send user object
         // back for usage
@@ -59,64 +72,88 @@ const AddLocation = ({route}: { route: Route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>
-        <Ionicons name="add-circle-outline" size={50} color="white" />
-        &nbsp;Location
-      </Text>
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0.5, y: 0.7}}
+        start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
       >
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          maxLength={26}
-          placeholderTextColor="grey"
-          keyboardType="default"
-          onChangeText={(event) => setName(event)}
-          value={name}
-        />
-        <View style={styles.pickerInput}>
-          <RNPickerSelect
-            style={{
-              ...pickerSelectStyles,
-              iconContainer: {
-                top: 20,
-                right: 10,
-              },
-              placeholder: {
-                color: 'grey',
-                fontSize: 20,
-              },
-            }}
-            onValueChange={(value) => setCategory(value)}
-            placeholder={{
-            }}
-            items={[
-              {label: 'Nature', value: 'Nature'},
-              {label: 'Towns and cities', value: 'Towns and cities'},
-              {label: 'Cultural and heritage', value: 'Cultural and heritage'},
-            ]}
+        <Text style={styles.header}>
+          <Ionicons name="add-circle-outline" size={45} color="white" />
+          &nbsp;Location
+        </Text>
+        <View style={styles.fieldContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Name"
+            maxLength={26}
+            placeholderTextColor="grey"
+            keyboardType="default"
+            onChangeText={(event) => setName(event)}
+            value={name}
           />
+        </View>
+        <View style={styles.fieldContainer}>
+          <TextInput
+            style={styles.coordinput}
+            placeholder="Latitude"
+            placeholderTextColor="grey"
+            keyboardType="numeric"
+            onChangeText={(event) => setCoordinates({...coordinates, lat: event})}
+            value={coordinates.lat}
+          />
+          <TextInput
+            style={styles.coordinput}
+            placeholder="Longitude"
+            placeholderTextColor="grey"
+            keyboardType="numeric"
+            onChangeText={(event) => setCoordinates({...coordinates, lon: event})}
+            value={coordinates.lon}
+          />
+        </View>
+        <View style={styles.fieldContainer}>
+          <View style={styles.pickerInput}>
+            <RNPickerSelect
+              style={{
+                ...pickerSelectStyles,
+                iconContainer: {
+                  top: 20,
+                  right: 10,
+                },
+                placeholder: {
+                  color: 'grey',
+                  fontSize: 18,
+                },
+              }}
+              onValueChange={(value) => setCategory(value)}
+              placeholder={{
+              }}
+              items={[
+                {label: 'Nature', value: 'Nature'},
+                {label: 'Towns and cities', value: 'Towns and cities'},
+                {label: 'Cultural and heritage', value: 'Cultural and heritage'},
+              ]}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.radioButton}
+            onPress={() => handleRadioButton()}
+          >
+            <Ionicons name={visited ? 'radio-button-on' : 'radio-button-off'} size={25} color="white" />
+            <Text style={styles.radioButtonText}>Visited</Text>
+          </TouchableOpacity>
         </View>
         <TextInput
           style={styles.commentInput}
           blurOnSubmit={true}
-          multiline
+          multiline={true}
+          textAlignVertical='top'
           maxLength={80}
           placeholder="Comments"
           placeholderTextColor="grey"
           keyboardType="default"
           onChangeText={(event) => setComments({comment: event})}
+          value={comments.comment}
         />
-        <TouchableOpacity
-          style={styles.radioButton}
-          onPress={() => handleRadioButton()}
-        >
-          <Ionicons name={visited ? 'radio-button-on' : 'radio-button-off'} size={40} color="white" />
-          <Text style={styles.radioButtonText}>Visited</Text>
-        </TouchableOpacity>
         <View style={styles.confirmButtons}>
           <TouchableOpacity
             style={styles.button}
@@ -133,63 +170,71 @@ const AddLocation = ({route}: { route: Route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+  },
+  fieldContainer: {
+    flexDirection: 'row', 
+    width: '80%', 
+    marginBottom: 40,
+    justifyContent: 'space-between',
   },
   radioButton: {
+    width: '48%',
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    height: 50,
-    width: '80%',
-    marginBottom: 40,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 5,
   },
   radioButtonText: {
-    fontSize: 35,
-    marginLeft: 20,
+    fontSize: 20,
+    marginLeft: 10,
     color: 'white',
   },
   input: {
-    height: 40,
-    marginBottom: 40,
+    flex: 1,
     borderWidth: 1,
-    padding: 10,
+    padding: 8,
     color: 'white',
-    fontSize: 20,
+    fontSize: 16,
     backgroundColor: '#444444',
     borderColor: '#878683',
     borderRadius: 5,
     alignItems: 'center',
-    width: '80%',
+  },
+  coordinput: {
+    width: '48%',
+    borderWidth: 1,
+    padding: 6,
+    color: 'white',
+    fontSize: 15,
+    backgroundColor: '#444444',
+    borderColor: '#878683',
+    borderRadius: 5,
+    alignItems: 'center',
   },
   commentInput: {
-    height: 120,
+    height: 100,
     marginBottom: 40,
     borderWidth: 1,
     padding: 10,
     color: 'white',
-    fontSize: 20,
+    fontSize: 16,
     backgroundColor: '#444444',
     borderColor: '#878683',
     borderRadius: 5,
-    alignItems: 'center',
     width: '80%',
   },
   pickerInput: {
-    height: 40,
-    marginBottom: 40,
+    width: '48%',
     borderWidth: 1,
-    paddingLeft: 10,
     color: 'white',
     backgroundColor: '#444444',
     borderColor: '#878683',
     borderRadius: 5,
-    width: '80%',
   },
   linearGradient: {
-    marginTop: 40,
     flex: 1,
-    padding: 20,
     alignItems: 'center',
   },
   buttonText: {
@@ -199,17 +244,15 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 5,
-    fontSize: 50,
+    fontSize: 45,
     color: 'white',
-    alignSelf: 'center',
-    marginTop: 100,
+    marginTop: 80,
+    marginBottom: 40,
   },
   button: {
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
     backgroundColor: '#2069e0',
-    marginRight: '10%',
     width: '100%',
   },
   confirmButtons: {
@@ -227,7 +270,6 @@ const pickerSelectStyles = StyleSheet.create({
   inputAndroid: {
     fontSize: 20,
     color: 'white',
-    height: 40,
   },
 });
 

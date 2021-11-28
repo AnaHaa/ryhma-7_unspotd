@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LinearGradient} from 'expo-linear-gradient';
@@ -86,8 +87,8 @@ const SignUp = ({navigation}: { navigation: Navigation }) => {
   async function handleCreateUser() {
     try {
       // Check that the input are valid
-      if (userName.length < 5 || passwordHash.length < 8 || !userName.includes('@') || !userName.includes('.')) {
-        Alert.alert('Email or password invalid', 'Email should be atleast 5 characters or password 8 characters');
+      if (userName.length < 5 || passwordHash.length < 5 || !userName.includes('@') || !userName.includes('.')) {
+        Alert.alert('Email or password invalid', 'Email and password should be atleast 5 characters');
       } else {
         // Use HttpModule to create new user
         await httpService.createUser({
@@ -119,9 +120,8 @@ const SignUp = ({navigation}: { navigation: Navigation }) => {
           userInformation: userObject,
         });
       }
-
-      // Incase of failure to proceed alert
-      Alert.alert('Account creation failed', 'Something went wrong...');
+      
+      Alert.alert('Account creation success');
     } catch (error) {
       // Catch and alert incase of error
       Alert.alert('Account creation failed', 'Something went wrong...');
@@ -133,7 +133,7 @@ const SignUp = ({navigation}: { navigation: Navigation }) => {
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0.5, y: 0.7}}
+        start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
       >
         <Text style={styles.header}>
           <Ionicons name="location-sharp" size={50} color="white" />
@@ -202,25 +202,20 @@ const SignUp = ({navigation}: { navigation: Navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
   },
   input: {
-    height: 40,
     marginBottom: 40,
     borderWidth: 1,
-    padding: 10,
+    padding: 8,
     color: 'white',
     fontSize: 20,
     backgroundColor: '#444444',
     borderColor: '#878683',
     borderRadius: 5,
-    alignItems: 'center',
     width: '80%',
   },
   linearGradient: {
-    marginTop: 40,
     flex: 1,
-    padding: 20,
     alignItems: 'center',
   },
   buttonText: {
@@ -236,14 +231,12 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 50,
     color: 'white',
-    alignSelf: 'center',
-    marginTop: 40,
+    marginTop: 100,
     marginBottom: 40,
   },
   button: {
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
     width: '80%',
     backgroundColor: '#2069e0',
   },

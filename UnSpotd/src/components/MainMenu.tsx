@@ -26,6 +26,9 @@ const MainMenu = ({route}: { route: Route }) => {
           backgroundColor: '#222222',
           borderColor: '#222222',
           borderTopColor: 'transparent',
+          height: 60,
+          paddingTop: 5,
+          paddingBottom: 5,
         },
         tabBarIcon: ({focused, color, size}) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,7 +61,7 @@ const MainMenu = ({route}: { route: Route }) => {
           userInformation: userInformation,
         }}
         options={{
-          tabBarLabel: 'ProfileStack',
+          tabBarLabel: 'My Profile',
           headerShown: false,
         }}
       />
@@ -69,7 +72,7 @@ const MainMenu = ({route}: { route: Route }) => {
           userInformation: userInformation,
         }}
         options={{
-          tabBarLabel: 'LocationStack',
+          tabBarLabel: 'My Locations',
           headerShown: false,
         }}
       />

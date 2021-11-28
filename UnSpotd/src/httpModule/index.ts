@@ -84,7 +84,10 @@ export default class HttpModule {
           comment: string
         }],
         category: string,
+        coordinates: {
+          lat: string, lon: string
         },
+      },
   ) {
     if (this.requestConfig.visitEndPoint && this.requestConfig.apiKey) {
       const response = await axios.put(this.requestConfig.visitEndPoint, location, {

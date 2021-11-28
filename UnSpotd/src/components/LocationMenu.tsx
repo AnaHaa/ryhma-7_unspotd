@@ -1,5 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TextInput, Text, FlatList, TouchableOpacity, Modal, Pressable, Alert} from 'react-native';
+import {
+  Platform, 
+  View, 
+  StyleSheet, 
+  TextInput, 
+  Text, 
+  FlatList, 
+  TouchableOpacity, 
+  Modal, 
+  Pressable, 
+  Alert
+} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Navigation, Visit} from '../interfaces/index';
@@ -92,10 +103,10 @@ const LocationMenu = ({route, navigation}: { route: Route, navigation: Navigatio
         case 1:
           // Sort filteredLocations
           setFilteredLocations(filteredLocations.concat().sort((a, b) => {
-            if (a.name < b.name) {
+            if (a.name.toLowerCase() < b.name.toLowerCase()) {
               return -1;
             }
-            if (a.name > b.name) {
+            if (a.name.toLowerCase() > b.name.toLowerCase()) {
               return 1;
             }
             return 0;
@@ -116,10 +127,10 @@ const LocationMenu = ({route, navigation}: { route: Route, navigation: Navigatio
         case 3:
           // Sort filteredLocations
           setFilteredLocations(filteredLocations.concat().sort((a, b) => {
-            if ((a.category && b.category && a.category < b.category) || (a.category && !b.category)) {
+            if ((a.category && b.category && a.category.toLowerCase() < b.category.toLowerCase()) || (a.category && !b.category)) {
               return -1;
             }
-            if ((a.category && b.category && a.category > b.category) || (!a.category && b.category)) {
+            if ((a.category && b.category && a.category.toLowerCase() > b.category.toLowerCase()) || (!a.category && b.category)) {
               return 1;
             }
             return 0;
@@ -195,7 +206,7 @@ const LocationMenu = ({route, navigation}: { route: Route, navigation: Navigatio
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0.5, y: 0.7}}
+        start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
       >
         <TextInput
           style={styles.input}
@@ -205,14 +216,14 @@ const LocationMenu = ({route, navigation}: { route: Route, navigation: Navigatio
           maxLength={26}
           onChangeText={(event) => handleSearch(event)}
         />
-        <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, alignItems: 'center'}}>
-          <TouchableOpacity style={styles.listFilter} onPress={() => sortVisits(1)}>
+        <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, padding: 5}}>
+          <TouchableOpacity onPress={() => sortVisits(1)} style={{flex: 1, alignItems: 'flex-start'}}>
             <Text style={{color: '#0095ff', fontSize: 20, fontWeight: 'bold'}} >Location</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listFilter} onPress={() => sortVisits(2)}>
+          <TouchableOpacity onPress={() => sortVisits(2)} style={{flex: 1, alignItems: 'center'}}>
             <Text style={{color: '#0095ff', fontSize: 20, fontWeight: 'bold'}} >Visited</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listFilter} onPress={() => sortVisits(3)}>
+          <TouchableOpacity onPress={() => sortVisits(3)} style={{flex: 1, alignItems: 'flex-end'}}>
             <Text style={{color: '#0095ff', fontSize: 20, fontWeight: 'bold'}} >Category</Text>
           </TouchableOpacity>
         </View>
@@ -222,11 +233,14 @@ const LocationMenu = ({route, navigation}: { route: Route, navigation: Navigatio
           renderItem={({item}) => (
             <View>
               <TouchableOpacity style={styles.listItem} onPress={() => handleLocationPress(item)}>
-                <Text style={{fontSize: 20, color: 'white', width: '33%', flexShrink: 1}}>{item.name}</Text>
-                <Text style={{fontSize: 20, color: 'white', width: '33%', flexShrink: 1}}>{
-                  item.visited ? 'True' : 'False'
-                }</Text>
-                <Text style={{fontSize: 20, width: '33%', color: 'white'}}>{item.category}</Text>
+                <Text style={{fontSize: 16, lineHeight: 25, color: 'white', flexShrink: 1, width: '40%'}}>
+                  {item.name}
+                </Text>
+                <Text style={{color: 'white', width: '10%', marginLeft: 10, marginRight: 10}}>
+                  {item.visited ? <Ionicons name="checkmark" size={25} /> : null}</Text>
+                <Text style={{fontSize: 16, lineHeight: 25, color: 'white', textAlign: 'right', width: '40%'}}>
+                  {item.category}
+                </Text>
               </TouchableOpacity>
             </View>
           )}
@@ -264,6 +278,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'white',
     fontSize: 30,
+    marginRight: 10,
   },
   button: {
     borderRadius: 20,
@@ -312,7 +327,6 @@ const styles = StyleSheet.create({
     paddingTop: 100,
   },
   input: {
-    height: 40,
     marginBottom: 40,
     borderWidth: 1,
     padding: 10,
@@ -326,16 +340,13 @@ const styles = StyleSheet.create({
   },
   listItem: {
     flex: 1,
-    padding: 10,
+    height: 60,
+    padding: 5,
+    alignItems: 'center',
     borderBottomWidth: 2,
     borderBottomColor: 'gray',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  listFilter: {
-    width: '33.33%',
-    alignItems: 'center',
-    borderColor: '#002336',
   },
 });
 

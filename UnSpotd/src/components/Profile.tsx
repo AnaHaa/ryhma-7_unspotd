@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TextInput, Pressable} from 'react-native';
+import {Platform, View, Text, StyleSheet, TextInput, Pressable} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
 import {Route, Navigation} from '../interfaces';
@@ -16,7 +16,7 @@ const Profile = ({route, navigation}: { route: Route, navigation: Navigation }) 
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0.5, y: 0.7}}
+        start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
       >
         <Text style={styles.header}>
           <Ionicons name="person-circle-outline" size={160} color={'white'} />
@@ -60,40 +60,13 @@ const Profile = ({route, navigation}: { route: Route, navigation: Navigation }) 
         </Pressable>
       </LinearGradient>
     </View>
+    
   );
 };
-
-/*
-        <View style={styles.inputIcon}>
-          <Ionicons name="eye-outline" style={{marginLeft: 20}} size={35} color={'white'} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="grey"
-            keyboardType="default"
-            secureTextEntry={true}
-            onChangeText={(event) => setPasswordHash(event)}
-          />
-        </View>
-*/
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
-  },
-  radioButton: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    height: 50,
-    width: '80%',
-    marginBottom: 40,
-
-  },
-  radioButtonText: {
-    fontSize: 35,
-    marginLeft: 20,
-    color: 'white',
   },
   buttonEdit: {
     padding: 10,
@@ -105,7 +78,6 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   input: {
-    marginLeft: 40,
     height: 40,
     padding: 10,
     color: 'white',
@@ -117,65 +89,18 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     borderBottomWidth: 1,
     borderColor: '#878683',
-    width: '100%',
-  },
-  commentInput: {
-    height: 120,
-    marginBottom: 40,
-    borderWidth: 1,
-    padding: 10,
-    color: 'white',
-    fontSize: 20,
-    backgroundColor: '#444444',
-    borderColor: '#878683',
-    borderRadius: 5,
-    alignItems: 'center',
-    width: '80%',
-  },
-  pickerInput: {
-    height: 40,
-    marginBottom: 40,
-    borderWidth: 1,
-    paddingLeft: 10,
-    color: 'white',
-    backgroundColor: '#444444',
-    borderColor: '#878683',
-    borderRadius: 5,
-    width: '80%',
   },
   linearGradient: {
     flex: 1,
     padding: 20,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 15,
-    textAlign: 'center',
-  },
-  textButtonText: {
-    color: '#2069e0',
-    fontSize: 15,
   },
   header: {
+    marginTop: 80,
     marginBottom: 25,
     padding: 5,
     fontSize: 50,
     color: 'white',
     alignSelf: 'center',
-    marginTop: 40,
-  },
-  button: {
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: '#2069e0',
-    width: '80%',
-  },
-  confirmButtons: {
-    marginTop: 20,
-    width: '80%',
-    alignContent: 'center',
-    alignItems: 'center',
   },
 });
 
