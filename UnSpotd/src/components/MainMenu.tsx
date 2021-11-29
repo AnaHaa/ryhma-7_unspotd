@@ -58,7 +58,7 @@ const MainMenu = ({route}: { route: Route }) => {
           userInformation: userInformation,
         }}
         options={{
-          tabBarLabel: 'ProfileStack',
+          tabBarLabel: 'My Profile',
           headerShown: false,
         }}
       />
@@ -69,7 +69,7 @@ const MainMenu = ({route}: { route: Route }) => {
           userInformation: userInformation,
         }}
         options={{
-          tabBarLabel: 'LocationStack',
+          tabBarLabel: 'My Locations',
           headerShown: false,
         }}
       />

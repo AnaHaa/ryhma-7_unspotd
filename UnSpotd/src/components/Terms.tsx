@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
 import {Navigation} from '../interfaces';
@@ -15,7 +15,7 @@ const Terms = ({navigation}: { navigation: Navigation }) => {
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0.5, y: 0.7}}
+        start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
       >
         <Text style={styles.text}>
           This is a student project made for school course

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Platform} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
 import HttpModule from '../httpModule';
@@ -43,26 +43,28 @@ const ModifyLocation = ({route, navigation}: { route: Route, navigation: Navigat
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>
-        <Ionicons name="create-outline" size={50} color="white" />
-        &nbsp;{userName}
-      </Text>
-      <LinearGradient
-        colors={['#080808', '#082c6c']}
-        style={styles.linearGradient}
-        start={{x: 0.5, y: 0.7}}
-      >
+    <LinearGradient
+      colors={['#080808', '#082c6c']}
+      style={styles.linearGradient}
+      start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
+    >
+      <View style={styles.container}>
+        <Text style={styles.header}>
+          <Ionicons name="create-outline" size={30} color="white" />
+          &nbsp;{userName}
+        </Text>
         <TextInput
           style={styles.input}
-          placeholder={name}
-          placeholderTextColor='white'
+          placeholder="name"
+          placeholderTextColor="grey"
+          value={name}
           onChangeText={(event) => setName(event)}
         />
         <TextInput
           style={styles.input}
-          placeholder={country}
-          placeholderTextColor='white'
+          placeholder="Country"
+          placeholderTextColor="grey"
+          value={country}
           onChangeText={(event) => setCountry(event)}
         />
         <TextInput
@@ -86,57 +88,28 @@ const ModifyLocation = ({route, navigation}: { route: Route, navigation: Navigat
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
-      </LinearGradient>
-    </View>
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
-  },
-  radioButton: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    height: 50,
+    justifyContent: 'center',
     width: '80%',
-    marginBottom: 40,
-
-  },
-  radioButtonText: {
-    fontSize: 35,
-    marginLeft: 20,
-    color: 'white',
   },
   input: {
-    height: 40,
     marginBottom: 40,
     borderWidth: 1,
-    padding: 10,
+    padding: 8,
     color: 'white',
     fontSize: 20,
     backgroundColor: '#444444',
     borderColor: '#878683',
     borderRadius: 5,
-    alignItems: 'center',
-    width: '80%',
-  },
-  commentInput: {
-    height: 120,
-    marginBottom: 40,
-    borderWidth: 1,
-    padding: 10,
-    color: 'white',
-    fontSize: 20,
-    backgroundColor: '#444444',
-    borderColor: '#878683',
-    borderRadius: 5,
-    alignItems: 'center',
-    width: '80%',
   },
   linearGradient: {
-    marginTop: 40,
     flex: 1,
     padding: 20,
     alignItems: 'center',
@@ -147,11 +120,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   header: {
-    padding: 5,
-    fontSize: 50,
+    fontSize: 25,
     color: 'white',
     alignSelf: 'center',
-    marginTop: 100,
+    marginBottom: 50,
   },
   button: {
     padding: 10,
@@ -162,7 +134,6 @@ const styles = StyleSheet.create({
     width: '45%',
   },
   confirmButtons: {
-    width: '80%',
     flexDirection: 'row',
   },
 });

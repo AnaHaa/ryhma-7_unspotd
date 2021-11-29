@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LinearGradient} from 'expo-linear-gradient';
@@ -35,8 +36,8 @@ const Login = ({navigation}: { navigation: Navigation }) => {
   async function handleLogin() {
     try {
       // Check that the input are valid
-      if (userName.length < 5 || passwordHash.length < 8 || !userName.includes('@') || !userName.includes('.')) {
-        Alert.alert('Email or password invalid', 'Email should be atleast 5 characters or password 8 characters');
+      if (userName.length < 5 || passwordHash.length < 5 || !userName.includes('@') || !userName.includes('.')) {
+        Alert.alert('Email or password invalid', 'Email and password should be atleast 5 characters');
       } else {
         // Use HttpModule to log in the existing user
         const userObject = await httpService.login({
@@ -73,7 +74,7 @@ const Login = ({navigation}: { navigation: Navigation }) => {
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0.5, y: 0.7}}
+        start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
       >
         <Text style={styles.header}>
           <Ionicons name="location-sharp" size={50} color="white" />
@@ -145,7 +146,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#444444',
     borderColor: '#878683',
     borderRadius: 5,
-    alignItems: 'center',
     width: '80%',
   },
   linearGradient: {
@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     width: '80%',
-    alignItems: 'center',
     color: '#2069e0',
     marginBottom: 40,
   },

@@ -15,7 +15,7 @@ export interface Visit {
     visited: boolean,
     comments?: {comment: string}[],
     tags?: object [],
-    category?: string,
+    category: string,
     pictureLink?: object [],
     coordinates: {
         lat: string,

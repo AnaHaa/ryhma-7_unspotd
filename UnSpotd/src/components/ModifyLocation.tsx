@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Platform} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Ionicons} from '@expo/vector-icons';
 import HttpModule from '../httpModule';
@@ -64,7 +64,7 @@ const ModifyLocation = ({route, navigation}: { route: Route, navigation: Navigat
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
-        start={{x: 0.5, y: 0.7}}
+        start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
       >
         <TextInput
           style={styles.input}
@@ -81,7 +81,8 @@ const ModifyLocation = ({route, navigation}: { route: Route, navigation: Navigat
         <TextInput
           style={styles.commentInput}
           blurOnSubmit={true}
-          multiline
+          multiline={true}
+          textAlignVertical='top'
           maxLength={80}
           value={comments.comment}
           keyboardType="default"
