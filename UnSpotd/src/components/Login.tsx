@@ -134,7 +134,6 @@ const Login = ({navigation}: { navigation: Navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
   },
   input: {
     height: 40,
@@ -149,7 +148,6 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   linearGradient: {
-    marginTop: 40,
     flex: 1,
     padding: 20,
     alignItems: 'center',
@@ -168,7 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     color: 'white',
     alignSelf: 'center',
-    marginTop: 40,
+    marginTop: 80,
     marginBottom: 120,
   },
   button: {

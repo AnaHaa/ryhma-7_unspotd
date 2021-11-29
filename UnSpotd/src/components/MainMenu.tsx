@@ -52,6 +52,7 @@ const MainMenu = ({route}: { route: Route }) => {
         tabBarInactiveTintColor: 'white',
       })}>
       <Tab.Screen
+
         name="ProfileStack"
         component={ProfileStack}
         initialParams={{

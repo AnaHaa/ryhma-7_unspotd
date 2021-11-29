@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 45,
     color: 'white',
-    marginTop: 80,
+    marginTop: 100,
     marginBottom: 40,
   },
   button: {

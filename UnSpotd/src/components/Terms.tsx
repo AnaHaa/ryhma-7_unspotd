@@ -8,15 +8,15 @@ import {Navigation} from '../interfaces';
 const Terms = ({navigation}: { navigation: Navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>
-        <Ionicons name="location-sharp" size={50} color="white" />
-        UnSpotd
-      </Text>
       <LinearGradient
         colors={['#080808', '#082c6c']}
         style={styles.linearGradient}
         start={Platform.OS === 'ios' ? {x: 0.5, y: 0.7} : {x: 0, y: 0.5}}
       >
+        <Text style={styles.header}>
+          <Ionicons name="location-sharp" size={50} color="white" />
+        UnSpotd
+        </Text>
         <Text style={styles.text}>
           This is a student project made for school course
           Ohjelmistotekniikan mobiiliprojekti 2021 syksy.
